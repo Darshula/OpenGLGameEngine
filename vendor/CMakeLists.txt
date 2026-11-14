@@ -1,14 +1,17 @@
-add_subdirectory(glew-cmake)
-target_compile_options(libglew_shared PRIVATE "-w")
-target_compile_options(libglew_static PRIVATE "-w")
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+add_compile_options(-w)
 
-add_subdirectory(glfw)
-target_compile_options(glfw PRIVATE "-w")
+add_subdirectory(glew-cmake SYSTEM)
 
-add_subdirectory(glm)
-target_compile_options(glm INTERFACE "-w")
+add_subdirectory(glfw SYSTEM)
 
-add_subdirectory(imgui)
-target_compile_options(imgui INTERFACE "-w")
+add_subdirectory(glm SYSTEM)
 
-add_subdirectory(stb-cmake)
+set(IMGUI_WITH_BACKEND ON CACHE BOOL "" FORCE)
+set(IMGUI_BACKEND_PLATFORM "GLFW" CACHE STRING "" FORCE)
+add_subdirectory(cmake-imgui SYSTEM)
+target_sources(imgui PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake-imgui/imgui/backends/imgui_impl_opengl3.cpp"
+)
+
+add_subdirectory(stb-cmake SYSTEM)

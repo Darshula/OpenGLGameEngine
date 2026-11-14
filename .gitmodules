@@ -7,9 +7,9 @@
 [submodule "vendor/glm"]
 	path = vendor/glm
 	url = https://github.com/g-truc/glm.git
-[submodule "vendor/imgui"]
-	path = vendor/imgui
-	url = https://github.com/ocornut/imgui.git
 [submodule "vendor/stb-cmake"]
 	path = vendor/stb-cmake
 	url = https://github.com/gracicot/stb-cmake.git
+[submodule "vendor/cmake-imgui"]
+	path = vendor/cmake-imgui
+	url = https://github.com/mikolajlubiak/cmake-imgui

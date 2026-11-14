@@ -182,13 +182,14 @@ include(cmake/Doxygen.cmake)
 # commenting it out and letting CMake decide how to link with it.
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
+find_package(OpenGL REQUIRED)
 target_link_libraries(
   ${PROJECT_NAME}
+  OpenGL::GL
   libglew_static
   glfw
-  glm
-  imgui-glfw
-  imgui-opengl3
+  glm::glm
+  ImGui::imgui
   stb::image)
 
 verbose_message("Successfully added all dependencies and linked against them.")

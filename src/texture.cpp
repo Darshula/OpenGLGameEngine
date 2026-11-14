@@ -35,7 +35,7 @@ Texture::Texture(std::string path)
   else {
     std::cout << "[ERROR]: Failed to load texture- ";
     std::cout << stbi_failure_reason() << '\n';
-    __debugbreak();
+    exit(1);
   }
 }
 
