@@ -3,18 +3,14 @@
 
 #include <vector>
 
-constexpr int GL_TRUE = 1;
-constexpr int GL_FALSE = 0;
-constexpr int GL_UNSIGNED_BYTE = 0x1401;
-constexpr int GL_UNSIGNED_INT = 0x1405;
-constexpr int GL_FLOAT = 0x1406;
+#include "GL/glew.h"
 
 struct VertexBufferElement {
-  int type;
+  GLenum type;
   int count;
-  char normalized;
+  GLboolean normalized;
 
-  static int getTypeSize(int type) {
+  static int getTypeSize(GLenum type) {
     switch (type) {
     case GL_FLOAT:
       return sizeof(float);

@@ -1,6 +1,7 @@
 #include "LearningOpenGL/indexBuffer.hpp"
 
 #include "GL/glew.h"
+
 #include <cstddef>
 
 IndexBuffer::IndexBuffer(const unsigned int *data, int count) : m_Count(count) {

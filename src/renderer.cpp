@@ -2,6 +2,7 @@
 #include "LearningOpenGL/indexBuffer.hpp"
 
 #include "GL/glew.h"
+
 #include "LearningOpenGL/shader.hpp"
 #include "LearningOpenGL/vertexArray.hpp"
 

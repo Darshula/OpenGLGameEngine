@@ -1,10 +1,7 @@
 #include "LearningOpenGL/shader.hpp"
 
 #include "GL/glew.h"
-#include <alloca.h>
-#include <cstddef>
-#include <glm/ext/matrix_float4x4.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "glm/gtc/type_ptr.hpp"
 
 #include <filesystem>
 #include <fstream>

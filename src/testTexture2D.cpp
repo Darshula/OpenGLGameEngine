@@ -5,16 +5,16 @@
 #include "LearningOpenGL/testTexture2D.hpp"
 #include "LearningOpenGL/texture.hpp"
 #include "LearningOpenGL/vertexArray.hpp"
-
-#include "GL/glew.h"
 #include "LearningOpenGL/vertexBuffer.hpp"
 #include "LearningOpenGL/vertexBufferLayout.hpp"
+
+#include "GL/glew.h"
+#include "glm/ext/matrix_clip_space.hpp"
+#include "glm/ext/matrix_float4x4.hpp"
 #include "glm/ext/matrix_transform.hpp"
 #include "imgui.h"
 
 #include <array>
-#include <glm/ext/matrix_clip_space.hpp>
-#include <glm/ext/matrix_float4x4.hpp>
 #include <memory>
 
 constexpr float right{1280.0F};
@@ -28,10 +28,8 @@ TestTexture2D::TestTexture2D()
       m_TranslationB(4 * 100.0F, 2 * 100.0F, 0.0F) {
   constexpr int coordinatesCount{4 * 4};
   std::array<float, coordinatesCount> positions{
-      -100.0 / 2, -100.0 / 2, 0.0, 0.0,
-      100.0 / 2,  -100.0 / 2, 1.0, 0.0,
-      100.0 / 2,  100.0 / 2,  1.0, 1.0,
-      -100.0 / 2, 100.0 / 2,  0.0, 1.0,
+      -100.0 / 2, -100.0 / 2, 0.0, 0.0, 100.0 / 2,  -100.0 / 2, 1.0, 0.0,
+      100.0 / 2,  100.0 / 2,  1.0, 1.0, -100.0 / 2, 100.0 / 2,  0.0, 1.0,
   };
   std::array<unsigned int, coordinatesCount> indices{0, 1, 2, 2, 3, 0};
 
