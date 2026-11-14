@@ -10,6 +10,7 @@ add_subdirectory(glm SYSTEM)
 set(IMGUI_WITH_BACKEND ON CACHE BOOL "" FORCE)
 set(IMGUI_BACKEND_PLATFORM "GLFW" CACHE STRING "" FORCE)
 add_subdirectory(cmake-imgui SYSTEM)
+target_link_libraries(imgui PUBLIC glfw)
 target_sources(imgui PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake-imgui/imgui/backends/imgui_impl_opengl3.cpp"
 )

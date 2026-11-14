@@ -116,18 +116,18 @@ endif()
 set_target_properties(
   ${PROJECT_NAME}
   PROPERTIES ARCHIVE_OUTPUT_DIRECTORY
-             "${CMAKE_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
+             "${PROJECT_BINARY_DIR}/lib/$<CONFIG>"
              LIBRARY_OUTPUT_DIRECTORY
-             "${CMAKE_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
+             "${PROJECT_BINARY_DIR}/lib/$<CONFIG>"
              RUNTIME_OUTPUT_DIRECTORY
-             "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}")
+             "${PROJECT_BINARY_DIR}/bin/$<CONFIG>")
 if(${PROJECT_NAME}_BUILD_EXECUTABLE AND ${PROJECT_NAME}_ENABLE_UNIT_TESTING)
   set_target_properties(
     ${PROJECT_NAME}_LIB
     PROPERTIES ARCHIVE_OUTPUT_DIRECTORY
-               "${CMAKE_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
+               "${PROJECT_BINARY_DIR}/lib/$<CONFIG>"
                LIBRARY_OUTPUT_DIRECTORY
-               "${CMAKE_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
+               "${PROJECT_BINARY_DIR}/lib/$<CONFIG>"
                OUTPUT_NAME ${PROJECT_NAME})
 endif()
 
