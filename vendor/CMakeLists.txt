@@ -1,4 +1,4 @@
-set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.10)
 add_compile_options(-w)
 
 add_subdirectory(glew-cmake SYSTEM)
