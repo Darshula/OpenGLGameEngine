@@ -1,5 +1,5 @@
-#ifndef LEARN_OPENGL_VERTEX_BUFFER_HPP
-#define LEARN_OPENGL_VERTEX_BUFFER_HPP
+#ifndef LEARNINGOPENGL_VERTEXBUFFER_HPP
+#define LEARNINGOPENGL_VERTEXBUFFER_HPP
 
 class VertexBuffer {
 public:
@@ -9,13 +9,13 @@ public:
   static void unbind();
 
 private:
-  unsigned int m_RendererID;
+  unsigned int m_RendererID{0};
 
 public:
-  VertexBuffer(const VertexBuffer &) = delete;
+  VertexBuffer(const VertexBuffer &)            = delete;
   VertexBuffer &operator=(const VertexBuffer &) = delete;
-  VertexBuffer(VertexBuffer &&) = delete;
-  VertexBuffer &operator=(VertexBuffer &&) = delete;
+  VertexBuffer(VertexBuffer &&)                 = delete;
+  VertexBuffer &operator=(VertexBuffer &&)      = delete;
 };
 
-#endif // LEARN_OPENGL_VERTEX_BUFFER_HPP
+#endif // LEARNINGOPENGL_VERTEXBUFFER_HPP

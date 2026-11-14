@@ -1,8 +1,7 @@
-#ifndef LEARN_OPENGL_SHADER_HPP
-#define LEARN_OPENGL_SHADER_HPP
+#ifndef LEARNINGOPENGL_SHADER_HPP
+#define LEARNINGOPENGL_SHADER_HPP
 
-#include "glm/glm.hpp"
-
+#include <glm/ext/matrix_float4x4.hpp>
 #include <string>
 #include <unordered_map>
 
@@ -21,7 +20,7 @@ private:
   int getUniformLocation(const std::string &name);
 
 public:
-  Shader(std::string fileDirectory);
+  explicit Shader(std::string fileDirectory);
   ~Shader();
   void bind() const;
   static void unbind();
@@ -32,15 +31,15 @@ public:
   void setUniformMat4f(const std::string &name, const glm::mat4 &matrix);
 
 private:
-  unsigned int m_RendererID;
+  unsigned int m_RendererID{0};
   std::string m_FileDirectory;
   std::unordered_map<std::string, int> m_UniformLocationCache;
 
 public:
-  Shader(const Shader &) = delete;
+  Shader(const Shader &)            = delete;
   Shader &operator=(const Shader &) = delete;
-  Shader(Shader &&) = delete;
-  Shader &operator=(Shader &&) = delete;
+  Shader(Shader &&)                 = delete;
+  Shader &operator=(Shader &&)      = delete;
 };
 
-#endif // LEARN_OPENGL_SHADER_HPP
+#endif // LEARNINGOPENGL_SHADER_HPP

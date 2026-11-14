@@ -1,5 +1,4 @@
 #include "LearningOpenGL/renderer.hpp"
-#include "LearningOpenGL/texture.hpp"
 
 #include "LearningOpenGL/test.hpp"
 #include "LearningOpenGL/testClearColor.hpp"
@@ -10,10 +9,10 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+#include <imgui.h>
 #include <iostream>
 
-int main(int /*argc*/, char ** /*argv*/)
-{
+int main(int /*argc*/, char ** /*argv*/) {
   constexpr int width{1280};
   constexpr int height{720};
 
@@ -55,7 +54,7 @@ int main(int /*argc*/, char ** /*argv*/)
 
   test::Test *currentTest{nullptr};
   auto *testMenu = new test::TestMenu(currentTest);
-  currentTest = testMenu;
+  currentTest    = testMenu;
 
   testMenu->registerTest<test::TestClearColor>("Clear Color");
   testMenu->registerTest<test::TestTexture2D>("2D Texture");
@@ -72,7 +71,7 @@ int main(int /*argc*/, char ** /*argv*/)
       currentTest->onUpdate(0.0F);
       currentTest->onRender();
       ImGui::Begin("Tests Window");
-      ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+      ImGui::Text("%.1f FPS", static_cast<double>(ImGui::GetIO().Framerate));
       if (currentTest != testMenu && ImGui::Button("<- Back")) {
         delete currentTest;
         currentTest = testMenu;

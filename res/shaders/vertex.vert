@@ -7,8 +7,7 @@ out vec2 v_TexCoord;
 
 uniform mat4 u_ModelViewProjectionMatrix;
 
-void main()
-{
+void main() {
   gl_Position = u_ModelViewProjectionMatrix * position;
-  v_TexCoord = texCoord;
+  v_TexCoord  = texCoord;
 }

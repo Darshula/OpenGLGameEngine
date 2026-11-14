@@ -1,5 +1,5 @@
-#ifndef LEARN_OPENGL_TEST_CLEAR_COLOR
-#define LEARN_OPENGL_TEST_CLEAR_COLOR
+#ifndef LEARNINGOPENGL_TESTCLEARCOLOR_HPP
+#define LEARNINGOPENGL_TESTCLEARCOLOR_HPP
 
 #include "test.hpp"
 
@@ -20,11 +20,11 @@ private:
   std::array<float, 4> m_ClearColor;
 
 public:
-  TestClearColor(const TestClearColor &) = delete;
+  TestClearColor(const TestClearColor &)            = delete;
   TestClearColor &operator=(const TestClearColor &) = delete;
-  TestClearColor(TestClearColor &&) = delete;
-  TestClearColor &operator=(TestClearColor &&) = delete;
+  TestClearColor(TestClearColor &&)                 = delete;
+  TestClearColor &operator=(TestClearColor &&)      = delete;
 };
 } // namespace test
 
-#endif // LEARN_OPENGL_TEST_CLEAR_COLOR
+#endif // LEARNINGOPENGL_TESTCLEARCOLOR_HPP

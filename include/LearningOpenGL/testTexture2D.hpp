@@ -1,18 +1,14 @@
-#ifndef LEARN_OPENGL_TEST_TEXTURE_2D
-#define LEARN_OPENGL_TEST_TEXTURE_2D
+#ifndef LEARNINGOPENGL_TESTTEXTURE2D_HPP
+#define LEARNINGOPENGL_TESTTEXTURE2D_HPP
 
 #include "indexBuffer.hpp"
+#include "shader.hpp"
 #include "texture.hpp"
 #include "vertexArray.hpp"
 #include "vertexBuffer.hpp"
-#include "vertexBufferLayout.hpp"
 
 #include "test.hpp"
 
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-
-#include <array>
 #include <memory>
 
 namespace test {
@@ -37,11 +33,11 @@ private:
   glm::vec3 m_TranslationA, m_TranslationB;
 
 public:
-  TestTexture2D(const TestTexture2D &) = delete;
+  TestTexture2D(const TestTexture2D &)            = delete;
   TestTexture2D &operator=(const TestTexture2D &) = delete;
-  TestTexture2D(TestTexture2D &&) = delete;
-  TestTexture2D &operator=(TestTexture2D &&) = delete;
+  TestTexture2D(TestTexture2D &&)                 = delete;
+  TestTexture2D &operator=(TestTexture2D &&)      = delete;
 };
 } // namespace test
 
-#endif // LEARN_OPENGL_TEST_TEXTURE_2D
+#endif // LEARNINGOPENGL_TESTTEXTURE2D_HPP
