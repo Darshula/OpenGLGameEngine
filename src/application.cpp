@@ -99,6 +99,12 @@ int main(int /*argc*/, char ** /*argv*/) {
         if (currentTest != nullptr) {
           currentTest->onUpdate(0.0F);
           currentTest->onRender();
+          static bool firstTestsWindowFrame = true;
+          if (firstTestsWindowFrame) {
+            ImGui::SetNextWindowPos(ImVec2(908.0F, 0.0F), ImGuiCond_Always);
+            ImGui::SetNextWindowSize(ImVec2(400.0F, 200.0F), ImGuiCond_Always);
+            firstTestsWindowFrame = false;
+          }
           ImGui::Begin("Tests Window");
           ImGui::Text("%.1f FPS",
                       static_cast<double>(ImGui::GetIO().Framerate));

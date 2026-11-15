@@ -128,11 +128,24 @@ void TestTexture2D::onRender() {
 }
 
 void TestTexture2D::onImGuiRender() {
-  // const float secondsToMilli{1000.0F};
-  ImGui::SliderFloat3("Translation A", &m_TranslationA.x, 0.0F,
-                      windowContext.width);
-  ImGui::SliderFloat3("Translation B", &m_TranslationB.x, 0.0F,
-                      windowContext.width);
+  constexpr float halfSize{50.0F};
+  const auto translationSliders = [&](const char *label, glm::vec3 &translation) {
+    ImGui::PushID(label);
+    ImGui::TextUnformatted(label);
+    ImGui::SameLine();
+    const float sliderWidth =
+        (ImGui::GetContentRegionAvail().x - ImGui::GetStyle().ItemSpacing.x) / 2.0F;
+    ImGui::SetNextItemWidth(sliderWidth);
+    ImGui::SliderFloat("##x", &translation.x, halfSize,
+                       windowContext.width - halfSize, "X: %.0f");
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(sliderWidth);
+    ImGui::SliderFloat("##y", &translation.y, halfSize,
+                       windowContext.height - halfSize, "Y: %.0f");
+    ImGui::PopID();
+  };
+  translationSliders("Translation A", m_TranslationA);
+  translationSliders("Translation B", m_TranslationB);
   ImGui::Text("Move images with WASD and Arrow Keys");
 }
 } // namespace test
