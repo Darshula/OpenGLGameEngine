@@ -1,12 +1,13 @@
 #include "LearningOpenGL/testClearColor.hpp"
 
+#include "LearningOpenGL/windowContext.hpp"
+
 #include "GL/glew.h"
 #include "imgui.h"
 
 namespace test {
-TestClearColor::TestClearColor()
-    : m_ClearColor{0.0F / RGB, 100.0F / RGB, 186.0F / RGB, 1.0F} // NOLINT
-{}
+TestClearColor::TestClearColor(const WindowContext & /*context*/)
+    : m_ClearColor{0.0F / RGB, 100.0F / RGB, 186.0F / RGB, 1.0F} {}
 
 TestClearColor::~TestClearColor() = default;
 

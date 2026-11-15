@@ -5,10 +5,12 @@
 
 #include <array>
 
+struct WindowContext;
+
 namespace test {
 class TestClearColor : public Test {
 public:
-  TestClearColor();
+  TestClearColor(const WindowContext & /*context*/);
   ~TestClearColor() override;
 
   void onUpdate(float deltaTime) override;

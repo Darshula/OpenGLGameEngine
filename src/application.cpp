@@ -3,6 +3,7 @@
 #include "LearningOpenGL/test.hpp"
 #include "LearningOpenGL/testClearColor.hpp"
 #include "LearningOpenGL/testTexture2D.hpp"
+#include "LearningOpenGL/windowContext.hpp"
 
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
@@ -10,14 +11,11 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-
 #include <iostream>
 
 int main(int /*argc*/, char ** /*argv*/) {
-  constexpr int width{1280};
-  constexpr int height{720};
 
-  GLFWwindow *window{nullptr};
+  WindowContext windowContext{};
   if (glfwInit() != GLFW_TRUE) {
     return -1;
   }
@@ -27,12 +25,14 @@ int main(int /*argc*/, char ** /*argv*/) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  window = glfwCreateWindow(width, height, "Hello World", nullptr, nullptr);
-  if (window == nullptr) {
+  windowContext.window = glfwCreateWindow(
+      static_cast<int>(windowContext.width),
+      static_cast<int>(windowContext.height), "Hello World", nullptr, nullptr);
+  if (windowContext.window == nullptr) {
     glfwTerminate();
     return -1;
   }
-  glfwMakeContextCurrent(window);
+  glfwMakeContextCurrent(windowContext.window);
   if (glewInit() != GLEW_OK) {
     return -1;
   }
@@ -48,7 +48,7 @@ int main(int /*argc*/, char ** /*argv*/) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
-  ImGui_ImplGlfw_InitForOpenGL(window, true);
+  ImGui_ImplGlfw_InitForOpenGL(windowContext.window, true);
   ImGui_ImplOpenGL3_Init(reinterpret_cast<const char *>(
       glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS)));
   ImGui::StyleColorsDark();
@@ -57,10 +57,10 @@ int main(int /*argc*/, char ** /*argv*/) {
   auto *testMenu = new test::TestMenu(currentTest);
   currentTest    = testMenu;
 
-  testMenu->registerTest<test::TestClearColor>("Clear Color");
-  testMenu->registerTest<test::TestTexture2D>("2D Texture");
+  testMenu->registerTest<test::TestClearColor>("Clear Color", windowContext);
+  testMenu->registerTest<test::TestTexture2D>("2D Texture", windowContext);
 
-  while (glfwWindowShouldClose(window) == GLFW_FALSE) {
+  while (glfwWindowShouldClose(windowContext.window) == GLFW_FALSE) {
     glClearColor(0.0F, 0.0F, 0.0F, 1.0F);
     Renderer::clear();
 
@@ -84,7 +84,7 @@ int main(int /*argc*/, char ** /*argv*/) {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-    glfwSwapBuffers(window);
+    glfwSwapBuffers(windowContext.window);
     glfwPollEvents();
   }
   if (currentTest != testMenu) {
@@ -96,7 +96,7 @@ int main(int /*argc*/, char ** /*argv*/) {
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
 
-  glfwDestroyWindow(window);
+  glfwDestroyWindow(windowContext.window);
   glfwTerminate();
   return 0;
 }

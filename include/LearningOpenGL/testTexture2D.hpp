@@ -11,10 +11,12 @@
 
 #include <memory>
 
+struct WindowContext;
 namespace test {
+
 class TestTexture2D : public Test {
 public:
-  TestTexture2D();
+  TestTexture2D(const WindowContext &context);
   ~TestTexture2D() override;
 
   void onUpdate(float deltaTime) override;
@@ -27,6 +29,8 @@ private:
   std::unique_ptr<IndexBuffer> m_IndexBuffer;
   std::unique_ptr<Shader> m_Shader;
   std::unique_ptr<Texture> m_Texture;
+
+  const WindowContext &windowContext;
 
   glm::mat4 m_Proj, m_View;
 

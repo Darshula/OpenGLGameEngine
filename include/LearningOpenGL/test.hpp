@@ -33,8 +33,9 @@ public:
 
   void onImGuiRender() override;
 
-  template <typename T> void registerTest(const std::string &name) {
-    m_Tests.push_back(std::make_pair(name, [] { return new T(); }));
+  template <typename T, typename Context>
+  void registerTest(const std::string &name, const Context &context) {
+    m_Tests.push_back(std::make_pair(name, [&context] { return new T(context); }));
     std::cout << "Registered test " << name << '\n';
   }
 

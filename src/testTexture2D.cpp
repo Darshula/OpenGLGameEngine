@@ -1,14 +1,16 @@
 #include "LearningOpenGL/indexBuffer.hpp"
 #include "LearningOpenGL/renderer.hpp"
-
 #include "LearningOpenGL/shader.hpp"
-#include "LearningOpenGL/testTexture2D.hpp"
 #include "LearningOpenGL/texture.hpp"
 #include "LearningOpenGL/vertexArray.hpp"
 #include "LearningOpenGL/vertexBuffer.hpp"
 #include "LearningOpenGL/vertexBufferLayout.hpp"
+#include "LearningOpenGL/windowContext.hpp"
+
+#include "LearningOpenGL/testTexture2D.hpp"
 
 #include "GL/glew.h"
+#include "GLFW/glfw3.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_float4x4.hpp"
 #include "glm/ext/matrix_transform.hpp"
@@ -17,12 +19,11 @@
 #include <array>
 #include <memory>
 
-constexpr float right{1280.0F};
-constexpr float top{720.0F};
-
 namespace test {
-TestTexture2D::TestTexture2D()
-    : m_Proj(glm::ortho(0.0F, right, 0.0F, top, -1.0F, 1.0F)),
+TestTexture2D::TestTexture2D(const WindowContext &context)
+    : windowContext(context),
+      m_Proj(glm::ortho(0.0F, windowContext.width, 0.0F, windowContext.height,
+                        -1.0F, 1.0F)),
       m_View(glm::translate(glm::mat4(1.0F), glm::vec3(0.0F, 0.0F, 0.0F))),
       m_TranslationA(2 * 100.0F, 2 * 100.0F, 0.0F),
       m_TranslationB(4 * 100.0F, 2 * 100.0F, 0.0F) {
@@ -67,22 +68,38 @@ void TestTexture2D::onRender() {
   m_Texture->bind();
 
   {
-    /*
-      const int incrementTranslation{10};
-      (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS &&
-       translationA.x < width - (100.0 / 2))
-          ? translationA += glm::vec3{incrementTranslation, 0, 0}
-      : (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS &&
-         translationA.x > 0 + (100.0 / 2))
-          ? translationA += glm::vec3{-incrementTranslation, 0, 0}
-      : (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS &&
-         translationA.y < height - (100.0 / 2))
-          ? translationA += glm::vec3{0, incrementTranslation, 0}
-      : (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS &&
-         translationA.y > 0 + (100.0 / 2))
-          ? translationA += glm::vec3{0, -incrementTranslation, 0}
-          : translationA += glm::vec3{0, 0, 0};
-    */
+    constexpr int width{1280};
+    constexpr int height{720};
+
+    const int incrementTranslation{10};
+
+    if (glfwGetKey(windowContext.window, GLFW_KEY_W) == GLFW_PRESS &&
+        static_cast<double>(m_TranslationA.y) < height - (100.0 / 2)) {
+      m_TranslationA += glm::vec3{0, incrementTranslation, 0};
+    } else if (glfwGetKey(windowContext.window, GLFW_KEY_A) == GLFW_PRESS &&
+               static_cast<double>(m_TranslationA.x) > 0 + (100.0 / 2)) {
+      m_TranslationA += glm::vec3{-incrementTranslation, 0, 0};
+    } else if (glfwGetKey(windowContext.window, GLFW_KEY_S) == GLFW_PRESS &&
+               static_cast<double>(m_TranslationA.y) > 0 + (100.0 / 2)) {
+      m_TranslationA += glm::vec3{0, -incrementTranslation, 0};
+    } else if (glfwGetKey(windowContext.window, GLFW_KEY_D) == GLFW_PRESS &&
+               static_cast<double>(m_TranslationA.x) < (width - (100.0 / 2))) {
+      m_TranslationA += glm::vec3{incrementTranslation, 0, 0};
+    }
+
+    if (glfwGetKey(windowContext.window, GLFW_KEY_UP) == GLFW_PRESS &&
+        static_cast<double>(m_TranslationB.y) < height - (100.0 / 2)) {
+      m_TranslationB += glm::vec3{0, incrementTranslation, 0};
+    } else if (glfwGetKey(windowContext.window, GLFW_KEY_LEFT) == GLFW_PRESS &&
+               static_cast<double>(m_TranslationB.x) > 0 + (100.0 / 2)) {
+      m_TranslationB += glm::vec3{-incrementTranslation, 0, 0};
+    } else if (glfwGetKey(windowContext.window, GLFW_KEY_DOWN) == GLFW_PRESS &&
+               static_cast<double>(m_TranslationB.y) > 0 + (100.0 / 2)) {
+      m_TranslationB += glm::vec3{0, -incrementTranslation, 0};
+    } else if (glfwGetKey(windowContext.window, GLFW_KEY_RIGHT) == GLFW_PRESS &&
+               static_cast<double>(m_TranslationB.x) < (width - (100.0 / 2))) {
+      m_TranslationB += glm::vec3{incrementTranslation, 0, 0};
+    }
 
     const glm::mat4 model{glm::translate(glm::mat4{1.0F}, m_TranslationA)};
     const glm::mat4 mvp{m_Proj * m_View * model};
@@ -102,7 +119,10 @@ void TestTexture2D::onRender() {
 
 void TestTexture2D::onImGuiRender() {
   // const float secondsToMilli{1000.0F};
-  ImGui::SliderFloat3("Translation A", &m_TranslationA.x, 0.0F, right);
-  ImGui::SliderFloat3("Translation B", &m_TranslationB.x, 0.0F, right);
+  ImGui::SliderFloat3("Translation A", &m_TranslationA.x, 0.0F,
+                      windowContext.width);
+  ImGui::SliderFloat3("Translation B", &m_TranslationB.x, 0.0F,
+                      windowContext.width);
+  ImGui::Text("Move images with WASD and Arrow Keys");
 }
 } // namespace test
