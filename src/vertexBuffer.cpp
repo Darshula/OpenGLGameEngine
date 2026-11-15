@@ -1,6 +1,10 @@
 #include "LearningOpenGL/vertexBuffer.hpp"
 
+#ifdef __EMSCRIPTEN__
+#include <GLES3/gl3.h>
+#else
 #include "GL/glew.h"
+#endif
 
 VertexBuffer::VertexBuffer(const void *data, unsigned int size) {
   glGenBuffers(1, &m_RendererID);

@@ -1,7 +1,12 @@
 #include "LearningOpenGL/shader.hpp"
 
-#include "GL/glew.h"
 #include "glm/gtc/type_ptr.hpp"
+
+#ifdef __EMSCRIPTEN__
+#  include <GLES3/gl3.h>
+#else
+#  include "GL/glew.h"
+#endif
 
 #include <filesystem>
 #include <fstream>

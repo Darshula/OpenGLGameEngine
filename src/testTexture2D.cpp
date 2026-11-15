@@ -9,7 +9,12 @@
 
 #include "LearningOpenGL/testTexture2D.hpp"
 
-#include "GL/glew.h"
+#ifdef __EMSCRIPTEN__
+#  include <GLES3/gl3.h>
+#else
+#  include "GL/glew.h"
+#endif
+
 #include "GLFW/glfw3.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_float4x4.hpp"
@@ -50,7 +55,12 @@ TestTexture2D::TestTexture2D(const WindowContext &context)
   m_IndexBuffer =
       std::make_unique<IndexBuffer>(&indices.front(), indices.size());
 
-  m_Shader = std::make_unique<Shader>("res/shaders/");
+#ifdef __EMSCRIPTEN__
+  m_Shader = std::make_unique<Shader>("res/shaders/web/");
+#else
+  m_Shader = std::make_unique<Shader>("res/shaders/desktop/");
+#endif
+
   m_Shader->bind();
 
   m_Texture = std::make_unique<Texture>("res/textures/Pacman_Open.png");

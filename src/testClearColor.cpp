@@ -1,9 +1,13 @@
 #include "LearningOpenGL/testClearColor.hpp"
-
 #include "LearningOpenGL/windowContext.hpp"
 
-#include "GL/glew.h"
 #include "imgui.h"
+
+#ifdef __EMSCRIPTEN__
+#include <GLES3/gl3.h>
+#else
+#include "GL/glew.h"
+#endif
 
 namespace test {
 TestClearColor::TestClearColor(const WindowContext & /*context*/)

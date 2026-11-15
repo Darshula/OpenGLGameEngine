@@ -5,7 +5,13 @@
 #include "LearningOpenGL/testTexture2D.hpp"
 #include "LearningOpenGL/windowContext.hpp"
 
-#include "GL/glew.h"
+#ifdef __EMSCRIPTEN__
+#  include <GLES3/gl3.h>
+#  include <emscripten.h>
+#else
+#  include "GL/glew.h"
+#endif
+
 #include "GLFW/glfw3.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -15,15 +21,20 @@
 
 int main(int /*argc*/, char ** /*argv*/) {
 
-  WindowContext windowContext{};
+  static WindowContext windowContext{};
   if (glfwInit() != GLFW_TRUE) {
     return -1;
   }
 
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+#ifdef __EMSCRIPTEN__
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+  glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+#else
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#endif
 
   windowContext.window = glfwCreateWindow(
       static_cast<int>(windowContext.width),
@@ -33,9 +44,18 @@ int main(int /*argc*/, char ** /*argv*/) {
     return -1;
   }
   glfwMakeContextCurrent(windowContext.window);
-  if (glewInit() != GLEW_OK) {
+#ifndef __EMSCRIPTEN__
+  glewExperimental = GL_TRUE;
+  const GLenum glewStatus = glewInit();
+  if (glewStatus != GLEW_OK) {
+    std::cerr << "GLEW initialization failed: "
+              << reinterpret_cast<const char *>(glewGetErrorString(glewStatus))
+              << '\n';
+    glfwDestroyWindow(windowContext.window);
+    glfwTerminate();
     return -1;
   }
+#endif
 
   glfwSwapInterval(1);
 
@@ -49,54 +69,66 @@ int main(int /*argc*/, char ** /*argv*/) {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGui_ImplGlfw_InitForOpenGL(windowContext.window, true);
-  ImGui_ImplOpenGL3_Init(reinterpret_cast<const char *>(
-      glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS)));
+#ifdef __EMSCRIPTEN__
+  ImGui_ImplOpenGL3_Init("#version 300 es");
+#else
+  ImGui_ImplOpenGL3_Init("#version 330 core");
+#endif
   ImGui::StyleColorsDark();
 
-  test::Test *currentTest{nullptr};
-  auto *testMenu = new test::TestMenu(currentTest);
-  currentTest    = testMenu;
+  static test::Test *currentTest{nullptr};
+  static auto *testMenu = new test::TestMenu(currentTest);
+  currentTest           = testMenu;
 
   testMenu->registerTest<test::TestClearColor>("Clear Color", windowContext);
   testMenu->registerTest<test::TestTexture2D>("2D Texture", windowContext);
 
+#ifdef __EMSCRIPTEN__
+  emscripten_set_main_loop(
+      [] {
+#else
   while (glfwWindowShouldClose(windowContext.window) == GLFW_FALSE) {
-    glClearColor(0.0F, 0.0F, 0.0F, 1.0F);
-    Renderer::clear();
+#endif
+        glClearColor(0.0F, 0.0F, 0.0F, 1.0F);
+        Renderer::clear();
 
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
-    if (currentTest != nullptr) {
-      currentTest->onUpdate(0.0F);
-      currentTest->onRender();
-      ImGui::Begin("Tests Window");
-      ImGui::Text("%.1f FPS", static_cast<double>(ImGui::GetIO().Framerate));
-      if (currentTest != testMenu && ImGui::Button("<- Back")) {
-        delete currentTest;
-        currentTest = testMenu;
-      }
-      currentTest->onImGuiRender();
-      ImGui::End();
-    }
+        if (currentTest != nullptr) {
+          currentTest->onUpdate(0.0F);
+          currentTest->onRender();
+          ImGui::Begin("Tests Window");
+          ImGui::Text("%.1f FPS",
+                      static_cast<double>(ImGui::GetIO().Framerate));
+          if (currentTest != testMenu && ImGui::Button("<- Back")) {
+            delete currentTest;
+            currentTest = testMenu;
+          }
+          currentTest->onImGuiRender();
+          ImGui::End();
+        }
 
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-    glfwSwapBuffers(windowContext.window);
-    glfwPollEvents();
+        glfwSwapBuffers(windowContext.window);
+        glfwPollEvents();
+#ifdef __EMSCRIPTEN__
+      },
+      0, true);
+#else
   }
   if (currentTest != testMenu) {
-    delete testMenu;
+    delete currentTest;
   }
-  delete currentTest;
-
+  delete testMenu;
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
-
   glfwDestroyWindow(windowContext.window);
   glfwTerminate();
+#endif
   return 0;
 }

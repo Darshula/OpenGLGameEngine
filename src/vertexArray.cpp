@@ -2,7 +2,11 @@
 #include "LearningOpenGL/vertexBuffer.hpp"
 #include "LearningOpenGL/vertexBufferLayout.hpp"
 
+#ifdef __EMSCRIPTEN__
+#include <GLES3/gl3.h>
+#else
 #include "GL/glew.h"
+#endif
 
 VertexArray::VertexArray() { glGenVertexArrays(1, &m_RendererID); }
 

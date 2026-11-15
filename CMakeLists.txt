@@ -24,9 +24,9 @@ message(STATUS "Started CMake for ${PROJECT_NAME} v${PROJECT_VERSION}...\n")
 if(UNIX)
   add_compile_options(
     "$<$<CONFIG:DEBUG>:-D_DEBUG>") # this will allow to use same _DEBUG macro
-                                   # available in both Linux as well as Windows
-                                   # - MSCV environment. Easy to put Debug
-                                   # specific code.
+  # available in both Linux as well as Windows
+  # - MSCV environment. Easy to put Debug
+  # specific code.
 endif(UNIX)
 
 #
@@ -48,7 +48,7 @@ endif()
 if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   message(
     FATAL_ERROR
-      "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there.\n"
+    "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there.\n"
   )
 endif()
 
@@ -116,19 +116,19 @@ endif()
 set_target_properties(
   ${PROJECT_NAME}
   PROPERTIES ARCHIVE_OUTPUT_DIRECTORY
-             "${PROJECT_BINARY_DIR}/lib/$<CONFIG>"
-             LIBRARY_OUTPUT_DIRECTORY
-             "${PROJECT_BINARY_DIR}/lib/$<CONFIG>"
-             RUNTIME_OUTPUT_DIRECTORY
-             "${PROJECT_BINARY_DIR}/bin/$<CONFIG>")
+  "${PROJECT_BINARY_DIR}/lib/$<CONFIG>"
+  LIBRARY_OUTPUT_DIRECTORY
+  "${PROJECT_BINARY_DIR}/lib/$<CONFIG>"
+  RUNTIME_OUTPUT_DIRECTORY
+  "${PROJECT_BINARY_DIR}/bin/$<CONFIG>")
 if(${PROJECT_NAME}_BUILD_EXECUTABLE AND ${PROJECT_NAME}_ENABLE_UNIT_TESTING)
   set_target_properties(
     ${PROJECT_NAME}_LIB
     PROPERTIES ARCHIVE_OUTPUT_DIRECTORY
-               "${PROJECT_BINARY_DIR}/lib/$<CONFIG>"
-               LIBRARY_OUTPUT_DIRECTORY
-               "${PROJECT_BINARY_DIR}/lib/$<CONFIG>"
-               OUTPUT_NAME ${PROJECT_NAME})
+    "${PROJECT_BINARY_DIR}/lib/$<CONFIG>"
+    LIBRARY_OUTPUT_DIRECTORY
+    "${PROJECT_BINARY_DIR}/lib/$<CONFIG>"
+    OUTPUT_NAME ${PROJECT_NAME})
 endif()
 
 message(STATUS "Added all header and implementation files.\n")
@@ -182,12 +182,25 @@ include(cmake/Doxygen.cmake)
 # commenting it out and letting CMake decide how to link with it.
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
-find_package(OpenGL REQUIRED)
+if(EMSCRIPTEN)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
+  target_compile_options(${PROJECT_NAME} PRIVATE "-sUSE_GLFW=3")
+  target_link_options(${PROJECT_NAME} PRIVATE
+    "-sUSE_GLFW=3"
+    "-sMIN_WEBGL_VERSION=2"
+    "-sMAX_WEBGL_VERSION=2"
+    "SHELL:--shell-file '${CMAKE_SOURCE_DIR}/res/shell.html'"
+    "SHELL:--preload-file '${CMAKE_SOURCE_DIR}/res@/res'")
+  set_target_properties(${PROJECT_NAME} PROPERTIES
+    SUFFIX ".html"
+    LINK_DEPENDS "${CMAKE_SOURCE_DIR}/res/shell.html")
+else()
+  find_package(OpenGL REQUIRED)
+  target_link_libraries(${PROJECT_NAME} OpenGL::GL libglew_static glfw)
+endif()
+
 target_link_libraries(
   ${PROJECT_NAME}
-  OpenGL::GL
-  libglew_static
-  glfw
   glm::glm
   ImGui::imgui
   stb::image)
@@ -205,18 +218,18 @@ if(${PROJECT_NAME}_BUILD_HEADERS_ONLY)
   target_include_directories(
     ${PROJECT_NAME}
     INTERFACE $<INSTALL_INTERFACE:include>
-              $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 else()
   target_include_directories(
     ${PROJECT_NAME}
     PUBLIC $<INSTALL_INTERFACE:include>
-           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
   if(${PROJECT_NAME}_BUILD_EXECUTABLE AND ${PROJECT_NAME}_ENABLE_UNIT_TESTING)
     target_include_directories(
       ${PROJECT_NAME}_LIB
       PUBLIC $<INSTALL_INTERFACE:include>
-             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
       PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
   endif()
 endif()
@@ -268,11 +281,11 @@ install(
 #
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/version.hpp.in
-               include/${PROJECT_NAME_LOWERCASE}/version.hpp @ONLY)
+  include/${PROJECT_NAME_LOWERCASE}/version.hpp @ONLY)
 
 install(
   FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME_LOWERCASE}/version.hpp
+  ${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME_LOWERCASE}/version.hpp
   DESTINATION include/${PROJECT_NAME_LOWERCASE})
 
 #
@@ -301,8 +314,8 @@ configure_package_config_file(
   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-              ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 #
 # Generate export header if specified
@@ -312,11 +325,11 @@ if(${PROJECT_NAME}_GENERATE_EXPORT_HEADER)
   include(GenerateExportHeader)
   generate_export_header(${PROJECT_NAME})
   install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWERCASE}_export.h
-          DESTINATION include)
+    DESTINATION include)
 
   message(
     STATUS
-      "Generated the export header `${PROJECT_NAME_LOWERCASE}_export.h` and installed it."
+    "Generated the export header `${PROJECT_NAME_LOWERCASE}_export.h` and installed it."
   )
 endif()
 
@@ -330,7 +343,7 @@ if(${PROJECT_NAME}_ENABLE_UNIT_TESTING)
   enable_testing()
   message(
     STATUS
-      "Build unit tests for the project. Tests should always be found in the test folder\n"
+    "Build unit tests for the project. Tests should always be found in the test folder\n"
   )
   add_subdirectory(test)
 endif()
@@ -339,6 +352,8 @@ endif()
 # Copying over resources
 #
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy_directory
-                       ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${PROJECT_NAME}>/res)
+if(NOT EMSCRIPTEN)
+  add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/res" "$<TARGET_FILE_DIR:${PROJECT_NAME}>/res")
+endif()

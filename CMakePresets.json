@@ -18,6 +18,13 @@
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "toolchainFile": "${sourceDir}/cmake/toolchains/mingw64.cmake"
+        },
+        {
+            "name": "webgl",
+            "displayName": "WebGL2 (Emscripten)",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "toolchainFile": "${sourceDir}/cmake/toolchains/emscripten.cmake"
         }
     ],
     "buildPresets": [
@@ -67,6 +74,30 @@
             "name": "windows-x64-minsizerel",
             "displayName": "Windows x86_64 MinSizeRel",
             "configurePreset": "windows-x64",
+            "configuration": "MinSizeRel"
+        },
+        {
+            "name": "webgl-debug",
+            "displayName": "WebGL 2 Debug",
+            "configurePreset": "webgl",
+            "configuration": "Debug"
+        },
+        {
+            "name": "webgl-release",
+            "displayName": "WebGL 2 Release",
+            "configurePreset": "webgl",
+            "configuration": "Release"
+        },
+        {
+            "name": "webgl-relwithdebinfo",
+            "displayName": "WebGL 2 RelWithDebInfo",
+            "configurePreset": "webgl",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "webgl-minsizerel",
+            "displayName": "WebGL 2 MinSizeRel",
+            "configurePreset": "webgl",
             "configuration": "MinSizeRel"
         }
     ]

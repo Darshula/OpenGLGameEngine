@@ -1,7 +1,12 @@
 #include "LearningOpenGL/texture.hpp"
 
-#include "GL/glew.h"
 #include "stb/stb_image.h"
+
+#ifdef __EMSCRIPTEN__
+#include <GLES3/gl3.h>
+#else
+#include "GL/glew.h"
+#endif
 
 #include <cstdlib>
 #include <iostream>

@@ -20,7 +20,7 @@ set(headers include/LearningOpenGL/indexBuffer.hpp
     include/LearningOpenGL/texture.hpp
     include/LearningOpenGL/vertexArray.hpp
     include/LearningOpenGL/vertexBuffer.hpp
-    include/LearningOpenGL/WindowContext.hpp
+    include/LearningOpenGL/windowContext.hpp
     include/LearningOpenGL/vertexBufferLayout.hpp)
 
 set(test_sources)
