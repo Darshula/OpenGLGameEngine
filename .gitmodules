@@ -12,4 +12,4 @@
 	url = https://github.com/gracicot/stb-cmake.git
 [submodule "vendor/cmake-imgui"]
 	path = vendor/cmake-imgui
-	url = https://github.com/mikolajlubiak/cmake-imgui
+	url = https://github.com/Darshula/cmake-imgui
