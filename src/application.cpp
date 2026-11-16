@@ -17,9 +17,23 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+#ifdef _WIN32
+#  ifndef WIN32_LEAN_AND_MEAN
+#    define WIN32_LEAN_AND_MEAN
+#  endif
+#  include <windows.h>
+#endif
+
 #include <iostream>
 
-int main(int /*argc*/, char ** /*argv*/) {
+static int runApplication() {
+  glfwSetErrorCallback([](int /*code*/, const char *description) {
+#ifdef _WIN32
+    MessageBoxA(nullptr, description, "GLFW error", MB_OK | MB_ICONERROR);
+#else
+    std::cerr << "GLFW error: " << description << '\n';
+#endif
+  });
 
   static WindowContext windowContext{};
   if (glfwInit() != GLFW_TRUE) {
@@ -45,9 +59,14 @@ int main(int /*argc*/, char ** /*argv*/) {
   }
   glfwMakeContextCurrent(windowContext.window);
 #ifndef __EMSCRIPTEN__
-  glewExperimental = GL_TRUE;
+  glewExperimental        = GL_TRUE;
   const GLenum glewStatus = glewInit();
   if (glewStatus != GLEW_OK) {
+#  ifdef _WIN32
+    MessageBoxA(nullptr,
+                reinterpret_cast<const char *>(glewGetErrorString(glewStatus)),
+                "GLEW initialization failed", MB_OK | MB_ICONERROR);
+#  endif
     std::cerr << "GLEW initialization failed: "
               << reinterpret_cast<const char *>(glewGetErrorString(glewStatus))
               << '\n';
@@ -138,3 +157,12 @@ int main(int /*argc*/, char ** /*argv*/) {
 #endif
   return 0;
 }
+
+#ifdef _WIN32
+int WINAPI WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/,
+                   LPSTR /*lpCmdLine*/, int /*nShowCmd*/) {
+  return runApplication();
+}
+#else
+int main(int /*argc*/, char ** /*argv*/) { return runApplication(); }
+#endif

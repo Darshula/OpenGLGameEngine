@@ -1,5 +1,10 @@
 set(CMAKE_POLICY_VERSION_MINIMUM 3.10)
-add_compile_options(-w)
+
+if(MSVC)
+  add_compile_options(/W0)
+else()
+  add_compile_options(-w)
+endif()
 
 if(NOT EMSCRIPTEN)
   add_subdirectory(glew-cmake SYSTEM)

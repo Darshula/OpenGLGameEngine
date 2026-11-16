@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 
+cmake_policy(SET CMP0091 NEW)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+
 #
 # Project details
 #
@@ -71,6 +74,10 @@ add_subdirectory(vendor)
 
 if(${PROJECT_NAME}_BUILD_EXECUTABLE)
   add_executable(${PROJECT_NAME} ${exe_sources})
+
+  if(WIN32)
+    set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE TRUE)
+  endif()
 
   if(${PROJECT_NAME}_VERBOSE_OUTPUT)
     verbose_message("Found the following sources:")
@@ -180,7 +187,7 @@ include(cmake/Doxygen.cmake)
 #
 # On Linux and Mac this variable is ignored. If any issues rise from it, try
 # commenting it out and letting CMake decide how to link with it.
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+# set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
 if(EMSCRIPTEN)
   target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)

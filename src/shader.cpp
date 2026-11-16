@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <utility>
+#include <vector>
 
 Shader::Shader(std::string fileDirectory)
     : m_FileDirectory(std::move(fileDirectory)) {
@@ -61,9 +62,10 @@ unsigned int Shader::compileShader(unsigned int type,
   if (compilationResult == GL_FALSE) {
     int length{};
     glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
-    char *message =
-        static_cast<char *>(alloca(static_cast<size_t>(length) * sizeof(char)));
-    glGetShaderInfoLog(shaderId, length, &length, message);
+    std::vector<char> message(static_cast<std::size_t>(length > 0 ? length : 1),
+                              '\0');
+    glGetShaderInfoLog(shaderId, static_cast<GLsizei>(message.size()), nullptr,
+                       message.data());
 
     std::cout << "Failed compiling ";
     if (type == GL_VERTEX_SHADER) {
@@ -71,7 +73,7 @@ unsigned int Shader::compileShader(unsigned int type,
     } else if (type == GL_FRAGMENT_SHADER) {
       std::cout << "fragment";
     }
-    std::cout << " shader" << '\n' << "message: " << message << '\n';
+    std::cout << " shader" << '\n' << "message: " << message.data() << '\n';
 
     glDeleteShader(shaderId);
     return 0;
