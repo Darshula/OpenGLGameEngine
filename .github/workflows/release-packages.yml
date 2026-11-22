@@ -94,5 +94,4 @@ jobs:
           gh release create "$GITHUB_REF_NAME" packages/* \
             --verify-tag \
             --title "$GITHUB_REF_NAME" \
-            --notes "Automated build of commit ${GITHUB_SHA}." \
-            --prerelease
+            --notes "Automated build of commit ${GITHUB_SHA}."
