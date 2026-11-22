@@ -36,6 +36,7 @@ static int runApplication() {
   });
 
   static WindowContext windowContext{};
+  glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
   if (glfwInit() != GLFW_TRUE) {
     return -1;
   }
