@@ -10,28 +10,40 @@
             "name": "linux-x64",
             "displayName": "Linux x86_64",
             "generator": "Ninja Multi-Config",
-            "binaryDir": "${sourceDir}/build/${presetName}"
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "_package_platform": "linux-x64"
+            }
         },
         {
             "name": "windows-x64-mingw",
             "displayName": "Windows x86_64 (MinGW)",
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
-            "toolchainFile": "${sourceDir}/cmake/toolchains/mingw64.cmake"
+            "toolchainFile": "${sourceDir}/cmake/toolchains/mingw64.cmake",
+            "cacheVariables": {
+                "_package_platform": "windows-x64-mingw"
+            }
         },
         {
             "name": "windows-x64-msvc",
             "displayName": "Windows x86_64 (MSVC)",
             "generator": "Visual Studio 17 2022",
             "architecture": "x64",
-            "binaryDir": "${sourceDir}/build/${presetName}"
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "_package_platform": "windows-x64-msvc"
+            }
         },
         {
             "name": "webgl",
             "displayName": "WebGL2 (Emscripten)",
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${presetName}",
-            "toolchainFile": "${sourceDir}/cmake/toolchains/emscripten.cmake"
+            "toolchainFile": "${sourceDir}/cmake/toolchains/emscripten.cmake",
+            "cacheVariables": {
+                "_package_platform": "webgl"
+            }
         }
     ],
     "buildPresets": [
