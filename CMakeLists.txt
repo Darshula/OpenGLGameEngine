@@ -207,6 +207,9 @@ else()
   find_package(OpenGL REQUIRED)
   target_link_libraries(${PROJECT_NAME} OpenGL::GL libglew_static glfw)
   target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
+  if(MINGW)
+  target_link_options(${PROJECT_NAME} PRIVATE -static)
+  endif()
 endif()
 
 target_link_libraries(
