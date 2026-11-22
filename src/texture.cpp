@@ -3,13 +3,12 @@
 #include "stb/stb_image.h"
 
 #ifdef __EMSCRIPTEN__
-#include <GLES3/gl3.h>
+#  include <GLES3/gl3.h>
 #else
-#include "GL/glew.h"
+#  include "GL/glew.h"
 #endif
 
-#include <cstdlib>
-#include <iostream>
+#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -36,9 +35,8 @@ Texture::Texture(std::string path) : m_Filepath(std::move(path)) {
     glBindTexture(GL_TEXTURE_2D, 0);
     stbi_image_free(m_LocalBuffer);
   } else {
-    std::cerr << "[ERROR]: Failed to load texture- ";
-    std::cout << stbi_failure_reason() << '\n';
-    exit(1);
+    throw std::runtime_error("[ERROR]: Failed to load texture '" + m_Filepath +
+                             "'");
   }
 }
 
