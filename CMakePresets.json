@@ -131,5 +131,183 @@
             "configurePreset": "webgl",
             "configuration": "MinSizeRel"
         }
+    ],
+    "packagePresets": [
+        {
+            "name": "linux-x64-debug",
+            "displayName": "Package Linux x86_64 Debug",
+            "configurePreset": "linux-x64",
+            "configurations": [
+                "Debug"
+            ],
+            "generators": [
+                "TGZ"
+            ]
+        },
+        {
+            "name": "linux-x64-release",
+            "displayName": "Package Linux x86_64 Release",
+            "configurePreset": "linux-x64",
+            "configurations": [
+                "Release"
+            ],
+            "generators": [
+                "TGZ"
+            ]
+        },
+        {
+            "name": "linux-x64-relwithdebinfo",
+            "displayName": "Package Linux x86_64 RelWithDebInfo",
+            "configurePreset": "linux-x64",
+            "configurations": [
+                "RelWithDebInfo"
+            ],
+            "generators": [
+                "TGZ"
+            ]
+        },
+        {
+            "name": "linux-x64-minsizerel",
+            "displayName": "Package Linux x86_64 MinSizeRel",
+            "configurePreset": "linux-x64",
+            "configurations": [
+                "MinSizeRel"
+            ],
+            "generators": [
+                "TGZ"
+            ]
+        },
+        {
+            "name": "windows-x64-mingw-debug",
+            "displayName": "Package Windows x86_64 Debug",
+            "configurePreset": "windows-x64-mingw",
+            "configurations": [
+                "Debug"
+            ],
+            "generators": [
+                "ZIP"
+            ]
+        },
+        {
+            "name": "windows-x64-mingw-release",
+            "displayName": "Package Windows x86_64 Release",
+            "configurePreset": "windows-x64-mingw",
+            "configurations": [
+                "Release"
+            ],
+            "generators": [
+                "ZIP"
+            ]
+        },
+        {
+            "name": "windows-x64-mingw-relwithdebinfo",
+            "displayName": "Package Windows x86_64 RelWithDebInfo",
+            "configurePreset": "windows-x64-mingw",
+            "configurations": [
+                "RelWithDebInfo"
+            ],
+            "generators": [
+                "ZIP"
+            ]
+        },
+        {
+            "name": "windows-x64-mingw-minsizerel",
+            "displayName": "Package Windows x86_64 MinSizeRel",
+            "configurePreset": "windows-x64-mingw",
+            "configurations": [
+                "MinSizeRel"
+            ],
+            "generators": [
+                "ZIP"
+            ]
+        },
+        {
+            "name": "windows-x64-msvc-debug",
+            "displayName": "Package Windows x86_64 Debug",
+            "configurePreset": "windows-x64-msvc",
+            "configurations": [
+                "Debug"
+            ],
+            "generators": [
+                "ZIP"
+            ]
+        },
+        {
+            "name": "windows-x64-msvc-release",
+            "displayName": "Package Windows x86_64 Release",
+            "configurePreset": "windows-x64-msvc",
+            "configurations": [
+                "Release"
+            ],
+            "generators": [
+                "ZIP"
+            ]
+        },
+        {
+            "name": "windows-x64-msvc-relwithdebinfo",
+            "displayName": "Package Windows x86_64 RelWithDebInfo",
+            "configurePreset": "windows-x64-msvc",
+            "configurations": [
+                "RelWithDebInfo"
+            ],
+            "generators": [
+                "ZIP"
+            ]
+        },
+        {
+            "name": "windows-x64-msvc-minsizerel",
+            "displayName": "Package Windows x86_64 MinSizeRel",
+            "configurePreset": "windows-x64-msvc",
+            "configurations": [
+                "MinSizeRel"
+            ],
+            "generators": [
+                "ZIP"
+            ]
+        },
+        {
+            "name": "webgl-debug",
+            "displayName": "Package WebGL 2 Debug",
+            "configurePreset": "webgl",
+            "configurations": [
+                "Debug"
+            ],
+            "generators": [
+                "ZIP"
+            ]
+        },
+        {
+            "name": "webgl-release",
+            "displayName": "Package WebGL 2 Release",
+            "configurePreset": "webgl",
+            "configurations": [
+                "Release"
+            ],
+            "generators": [
+                "ZIP"
+            ]
+        },
+        {
+            "name": "webgl-relwithdebinfo",
+            "displayName": "Package WebGL 2 RelWithDebInfo",
+            "configurePreset": "webgl",
+            "configurations": [
+                "RelWithDebInfo"
+            ],
+            "generators": [
+                "ZIP"
+            ]
+        },
+        {
+            "name": "webgl-minsizerel",
+            "displayName": "Package WebGL 2 MinSizeRel",
+            "configurePreset": "webgl",
+            "configurations": [
+                "MinSizeRel"
+            ],
+            "generators": [
+                "ZIP"
+            ]
+        }
     ]
 }

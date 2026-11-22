@@ -191,19 +191,22 @@ include(cmake/Doxygen.cmake)
 
 if(EMSCRIPTEN)
   target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
-  target_compile_options(${PROJECT_NAME} PRIVATE "-sUSE_GLFW=3")
   target_link_options(${PROJECT_NAME} PRIVATE
     "-sUSE_GLFW=3"
     "-sMIN_WEBGL_VERSION=2"
     "-sMAX_WEBGL_VERSION=2"
     "SHELL:--shell-file '${CMAKE_SOURCE_DIR}/res/shell.html'"
     "SHELL:--preload-file '${CMAKE_SOURCE_DIR}/res@/res'")
+  file(GLOB_RECURSE _web_resources CONFIGURE_DEPENDS
+    LIST_DIRECTORIES FALSE "${CMAKE_SOURCE_DIR}/res/*")
+  set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY LINK_DEPENDS ${_web_resources})
   set_target_properties(${PROJECT_NAME} PROPERTIES
     SUFFIX ".html"
     LINK_DEPENDS "${CMAKE_SOURCE_DIR}/res/shell.html")
 else()
   find_package(OpenGL REQUIRED)
   target_link_libraries(${PROJECT_NAME} OpenGL::GL libglew_static glfw)
+  target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
 endif()
 
 target_link_libraries(
@@ -363,4 +366,48 @@ if(NOT EMSCRIPTEN)
   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     "${CMAKE_SOURCE_DIR}/res" "$<TARGET_FILE_DIR:${PROJECT_NAME}>/res")
+endif()
+
+#
+# Packaging build
+#
+
+if(${PROJECT_NAME}_BUILD_EXECUTABLE)
+  if(EMSCRIPTEN)
+    install(FILES
+      "$<TARGET_FILE_DIR:${PROJECT_NAME}>/${PROJECT_NAME}.html"
+      "$<TARGET_FILE_DIR:${PROJECT_NAME}>/${PROJECT_NAME}.js"
+      "$<TARGET_FILE_DIR:${PROJECT_NAME}>/${PROJECT_NAME}.wasm"
+      "$<TARGET_FILE_DIR:${PROJECT_NAME}>/${PROJECT_NAME}.data"
+      DESTINATION . COMPONENT AppRuntime)
+    install(FILES "$<TARGET_FILE:${PROJECT_NAME}>"
+      DESTINATION . RENAME index.html COMPONENT AppRuntime)
+    set(_package_platform "webgl")
+    set(CPACK_GENERATOR "ZIP")
+  else()
+    install(TARGETS ${PROJECT_NAME}
+      RUNTIME DESTINATION . COMPONENT AppRuntime)
+    install(DIRECTORY "${CMAKE_SOURCE_DIR}/res"
+      DESTINATION . COMPONENT AppRuntime)
+    if(WIN32)
+      if(MSVC)
+        set(_package_platform "windows-x64-msvc")
+      else()
+        set(_package_platform "windows-x64-mingw")
+      endif()
+      set(CPACK_GENERATOR "ZIP")
+    else()
+      set(_package_platform "linux-x64")
+      set(CPACK_GENERATOR "TGZ")
+    endif()
+  endif()
+
+  set(CPACK_PACKAGE_NAME "LearningOpenGL")
+  set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+  set(CPACK_PACKAGE_FILE_NAME
+    "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${_package_platform}")
+  set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
+  set(CPACK_COMPONENTS_ALL AppRuntime)
+  set(CPACK_COMPONENTS_GROUPING ALL_COMPONENTS_IN_ONE)
+  include(CPack)
 endif()

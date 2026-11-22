@@ -36,7 +36,9 @@ static int runApplication() {
   });
 
   static WindowContext windowContext{};
+#if !defined(__EMSCRIPTEN__) && defined(__linux__)
   glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+#endif
   if (glfwInit() != GLFW_TRUE) {
     return -1;
   }
