@@ -203,12 +203,28 @@ if(EMSCRIPTEN)
   set_target_properties(${PROJECT_NAME} PROPERTIES
     SUFFIX ".html"
     LINK_DEPENDS "${CMAKE_SOURCE_DIR}/res/shell.html")
+  set(_web_index_template [=[<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="refresh" content="0; url=@PROJECT_NAME@.html">
+  <title>@PROJECT_NAME@</title>
+</head>
+<body>
+  <p>Opening <a href="@PROJECT_NAME@.html">@PROJECT_NAME@</a>…</p>
+</body>
+</html>
+]=])
+  string(CONFIGURE "${_web_index_template}" _web_index_html @ONLY)
+  file(GENERATE
+    OUTPUT "${PROJECT_BINARY_DIR}/bin/$<CONFIG>/index.html"
+    CONTENT "${_web_index_html}")
 else()
   find_package(OpenGL REQUIRED)
   target_link_libraries(${PROJECT_NAME} OpenGL::GL libglew_static glfw)
   target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
   if(MINGW)
-  target_link_options(${PROJECT_NAME} PRIVATE -static)
+    target_link_options(${PROJECT_NAME} PRIVATE -static)
   endif()
 endif()
 
@@ -383,8 +399,8 @@ if(${PROJECT_NAME}_BUILD_EXECUTABLE)
       "$<TARGET_FILE_DIR:${PROJECT_NAME}>/${PROJECT_NAME}.wasm"
       "$<TARGET_FILE_DIR:${PROJECT_NAME}>/${PROJECT_NAME}.data"
       DESTINATION . COMPONENT AppRuntime)
-    install(FILES "$<TARGET_FILE:${PROJECT_NAME}>"
-      DESTINATION . RENAME index.html COMPONENT AppRuntime)
+    install(FILES "$<TARGET_FILE_DIR:${PROJECT_NAME}>/index.html"
+      DESTINATION . COMPONENT AppRuntime)
   else()
     install(TARGETS ${PROJECT_NAME}
       RUNTIME DESTINATION . COMPONENT AppRuntime)
